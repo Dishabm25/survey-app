@@ -21,10 +21,12 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                sh 'docker build -t survey-app .'
-            }
+       stage('Docker Build') {
+    steps {
+        sh 'docker pull eclipse-temurin:17-jdk-alpine'
+        sh 'docker build -t survey-app .'
+    }
+
         }
     }
 

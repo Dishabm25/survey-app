@@ -1,50 +1,39 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'
-    }
-
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Dishabm25/survey-app.git'
+                git 'https://github.com/Dishabm25/survey-app.git'
             }
         }
 
-        stage('Build with Maven') {
+        stage('Build') {
             steps {
                 sh 'mvn clean package'
             }
         }
 
-        stage('Run Tests') {
+        stage('Test') {
             steps {
                 sh 'mvn test'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Docker Build') {
             steps {
-                sh 'docker build -t survey-app:latest .'
-            }
-        }
-
-        stage('Run Container') {
-            steps {
-                sh 'docker run -d -p 8085:8085 --name survey-app-container survey-app:latest || true'
+                sh 'docker build -t survey-app .'
             }
         }
     }
 
     post {
         success {
-            echo 'BUILD SUCCESS ✅ Survey App deployed successfully'
+            echo "BUILD SUCCESS ✅"
         }
-
         failure {
-            echo 'BUILD FAILED ❌ Check logs'
+            echo "BUILD FAILED ❌"
         }
     }
 }

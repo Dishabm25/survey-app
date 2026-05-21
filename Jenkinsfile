@@ -21,21 +21,55 @@ pipeline {
             }
         }
 
-       stage('Docker Build') {
-    steps {
-        sh 'docker pull eclipse-temurin:17-jdk-alpine'
-        sh 'docker build -t survey-app .'
-    }
-
+        stage('Docker Build') {
+            steps {
+                sh 'docker pull eclipse-temurin:17-jdk-alpine'
+                sh 'docker build -t survey-app .'
+            }
         }
     }
 
     post {
         success {
-            echo "BUILD SUCCESS ✅"
+            emailext(
+                to: 'dishamgowda20052@gmail.com',
+                subject: "✔ SUCCESS: Survey App Build Passed",
+                body: """
+Hello,
+
+Your Jenkins Pipeline has SUCCESSFULLY completed.
+
+✔ Project: Survey App
+✔ Status: SUCCESS
+✔ Build Number: ${env.BUILD_NUMBER}
+✔ Job: ${env.JOB_NAME}
+
+Docker image built successfully.
+
+-- Jenkins CI/CD System
+"""
+            )
         }
+
         failure {
-            echo "BUILD FAILED ❌"
+            emailext(
+                to: 'dishamgowda20052@gmail.com',
+                subject: "❌ FAILED: Survey App Build Failed",
+                body: """
+Hello,
+
+Your Jenkins Pipeline has FAILED.
+
+❌ Project: Survey App
+❌ Status: FAILURE
+✔ Build Number: ${env.BUILD_NUMBER}
+✔ Job: ${env.JOB_NAME}
+
+Please check Jenkins logs.
+
+-- Jenkins CI/CD System
+"""
+            )
         }
     }
 }

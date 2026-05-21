@@ -5,7 +5,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/Dishabm25/survey-app.git'
+                git branch: 'main', url: 'https://github.com/Dishabm25/survey-app.git'
             }
         }
 
